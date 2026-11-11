@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import { DESTINATIONS } from '../../data/site';
+---
+<Base title="Destinations in Austria" description="Vienna, Salzburg, the Salzkammergut, Tyrol and Innsbruck, the Wachau and Carinthia: Alm's destination guides." crumbs={[{ name: 'Destinations', url: '/destinations/' }]}>
+  <div class="wrap phead"><h1>Destinations</h1><p class="lede">Six regions that shape most trips to Austria, from the Danube in the east to the high Alps in the west.</p></div>
+  <div class="wrap grid grid-3">
+    {DESTINATIONS.map((d) => (
+      <article class="card">
+        <a href={`/destinations/${d.slug}/`} tabindex="-1" aria-hidden="true"><Photo name={d.photo} widths={[360, 560, 800]} sizes="(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw" decorative /></a>
+        <h2 style="font-size:1.3rem;margin-top:0.8rem"><a href={`/destinations/${d.slug}/`}>{d.name}</a></h2>
+        <p>{d.blurb}</p>
+      </article>
+    ))}
+  </div>
+</Base>

@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts } from '../../lib/posts';
+import { DESTINATIONS, SITE } from '../../data/site';
+export function getStaticPaths() { return DESTINATIONS.map((d) => ({ params: { slug: d.slug }, props: { dest: d } })); }
+const { dest } = Astro.props;
+const posts = (await getPosts()).filter((p) => p.data.destinations.includes(dest.slug));
+---
+<Base title={dest.name} description={`${dest.blurb} Stories and practical guides from Alm.`} ogImage={dest.photo}
+  crumbs={[{ name: 'Destinations', url: '/category/destinations/' }, { name: dest.name, url: `/destinations/${dest.slug}/` }]}>
+  <div class="wrap phead"><p class="kicker">Destination</p><h1>{dest.name}</h1><p class="lede">{dest.blurb}</p></div>
+  <div class="hero" style="margin-bottom:2rem"><Photo name={dest.photo} eager credit widths={[480, 720, 960, 1280, 1600]} sizes="(min-width: 80rem) 80rem, 100vw" /></div>
+  <section class="wrap" aria-labelledby="posts-h">
+    <h2 id="posts-h">Stories about {dest.name}</h2>
+    {posts.length ? <div class="grid grid-3">{posts.map((p) => <PostCard post={p} />)}</div> : <p>A dedicated {dest.name} story is on the way.</p>}
+  </section>
+  <div class="wrap">
+    <aside class="plan" aria-labelledby="plan-h">
+      <p class="kicker">Plan this trip</p>
+      <h2 id="plan-h">Plan {dest.name} with a local operator</h2>
+      <p>Danube & Alps, a verified operator in the Tourground directory, plans Austria trips by rail and publishes a planning page for {dest.name}.</p>
+      <div class="actions"><a class="btn" href={dest.operatorUrl} rel="noopener">See Danube &amp; Alps on {dest.name}</a><a class="btn btn-ghost" href={SITE.directoryUrl} rel="noopener">Browse the Tourground directory</a></div>
+      <p class="small">Alm is published by Tourground; see our <a href="/disclosure/">disclosure</a>.</p>
+    </aside>
+  </div>
+</Base>

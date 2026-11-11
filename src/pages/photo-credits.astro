@@ -1,0 +1,21 @@
+---
+import Page from '../layouts/Page.astro';
+import Photo from '../components/Photo.astro';
+import { allPhotoKeys, photo } from '../data/photos';
+const photos = allPhotoKeys.map(photo);
+---
+<Page title="Photo credits" path="/photo-credits/" description="Credits and licences for every photograph used on Alm.">
+  <p>Every photograph on Alm is a real photograph used under a free licence from Wikimedia Commons. Each is credited where it appears and listed here with its author and licence. Photos are resized and cropped for the site; otherwise they are unchanged.</p>
+  <ul class="credits-list">
+    {photos.map((p) => (
+      <li>
+        <Photo name={p.key} widths={[240]} sizes="7rem" decorative />
+        <div>
+          <strong>{p.caption}</strong><br />
+          Photo: {p.author}. Licence: <a href={p.licenseUrl} rel="license noopener">{p.license}</a>.<br />
+          <a href={p.page} rel="noopener">Original file on Wikimedia Commons</a>
+        </div>
+      </li>
+    ))}
+  </ul>
+</Page>

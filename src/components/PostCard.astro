@@ -1,0 +1,21 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Photo from './Photo.astro';
+import { categoryName, fmtDate, isoDate } from '../data/site';
+import { readingTime } from '../lib/posts';
+interface Props { post: CollectionEntry<'posts'>; headingLevel?: 'h2' | 'h3'; sizes?: string }
+const { post, headingLevel = 'h3', sizes = '(min-width: 64rem) 33vw, (min-width: 40rem) 50vw, 100vw' } = Astro.props;
+const d = post.data;
+const H = headingLevel;
+const url = `/stories/${post.id}/`;
+---
+<article class="card">
+  <a href={url} tabindex="-1" aria-hidden="true"><Photo name={d.hero} widths={[360, 560, 800]} sizes={sizes} decorative /></a>
+  <p class="kicker" style="margin-top:0.8rem">
+    {d.advertisement && <><span class="ad-label">Advertisement feature</span> </>}
+    <a href={`/category/${d.category}/`}>{categoryName(d.category)}</a>
+  </p>
+  <H style="margin-top:0"><a href={url}>{d.title}</a></H>
+  <p>{d.description}</p>
+  <p class="meta"><time datetime={isoDate(d.published)}>{fmtDate(d.published)}</time> · {readingTime(post.body ?? '')} min read</p>
+</article>

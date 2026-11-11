@@ -1,0 +1,15 @@
+---
+import { SITE } from '../data/site';
+interface Props { plan: { heading: string; text: string; operator: string; url: string; linkText: string } }
+const { plan } = Astro.props;
+---
+<aside class="plan" aria-labelledby="plan-h">
+  <p class="kicker">Plan this trip</p>
+  <h2 id="plan-h">{plan.heading}</h2>
+  <p>{plan.text}</p>
+  <div class="actions">
+    <a class="btn" href={plan.url} rel="noopener">{plan.linkText}</a>
+    <a class="btn btn-ghost" href={SITE.directoryUrl} rel="noopener">Browse the Tourground directory</a>
+  </div>
+  <p class="small">{plan.operator} is a verified operator listed in the Tourground directory, where you can also compare other local travel companies. Alm is published by Tourground; see our <a href="/disclosure/">disclosure</a>.</p>
+</aside>

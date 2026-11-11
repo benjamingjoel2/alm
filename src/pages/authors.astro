@@ -1,0 +1,19 @@
+---
+import Page from '../layouts/Page.astro';
+import { AUTHORS, SITE } from '../data/site';
+import { getPosts } from '../lib/posts';
+const posts = await getPosts();
+---
+<Page title="Authors" path="/authors/" description="Who writes Alm: the Alm editors at Tourground.">
+  {Object.entries(AUTHORS).map(([id, a]) => (
+    <section aria-labelledby={`a-${id}`}>
+      <h2 id={`a-${id}`}>{a.name}</h2>
+      <p class="meta">{a.role}</p>
+      <p>{a.bio}</p>
+      <p>We write from official sources: national and regional tourist boards, the Austrian Alpine Club, ÖBB, venue and museum websites, and government travel advice. We do not accept payment for coverage in editorial stories.</p>
+      <h3>Stories by {a.name}</h3>
+      <ul>{posts.filter((p) => p.data.author === id).map((p) => <li><a href={`/stories/${p.id}/`}>{p.data.title}</a></li>)}</ul>
+    </section>
+  ))}
+  <p>To contact the editors, write to <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+</Page>

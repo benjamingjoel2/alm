@@ -1,0 +1,90 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Photo from '../../components/Photo.astro';
+import PlanBox from '../../components/PlanBox.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts, readingTime, related, wordCount } from '../../lib/posts';
+import { SITE, AUTHORS, categoryName, destinationName, fmtDate, isoDate } from '../../data/site';
+import { photo } from '../../data/photos';
+import { getImage } from 'astro:assets';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post) => ({ params: { slug: post.id }, props: { post, all: posts } }));
+}
+const { post, all } = Astro.props;
+const d = post.data;
+const { Content } = await render(post);
+const author = AUTHORS[d.author] ?? AUTHORS['alm-editors'];
+const url = `${SITE.url}/stories/${post.id}/`;
+const rel = related(post, all, 3);
+const img = await getImage({ src: photo(d.hero).src, width: 1200, format: 'jpg', quality: 75 });
+const host = (u: string) => new URL(u).hostname.replace(/^www\./, '');
+const ld = {
+  '@type': 'BlogPosting',
+  '@id': `${url}#post`,
+  headline: d.title,
+  description: d.description,
+  url,
+  mainEntityOfPage: url,
+  image: { '@type': 'ImageObject', url: new URL(img.src, SITE.url).href, width: img.attributes.width, height: img.attributes.height },
+  datePublished: isoDate(d.published),
+  dateModified: isoDate(d.updated),
+  wordCount: wordCount(post.body ?? ''),
+  articleSection: categoryName(d.category),
+  keywords: d.destinations.map(destinationName).join(', ') || undefined,
+  inLanguage: 'en-GB',
+  author: { '@type': 'Organization', name: author.name, url: `${SITE.url}/authors/` },
+  publisher: { '@id': `${SITE.url}/#publisher` },
+  isPartOf: { '@id': `${SITE.url}/#website` },
+  citation: d.sources.map((s) => s.url),
+  ...(d.advertisement ? { sponsor: { '@type': 'Organization', name: d.plan.operator } } : {}),
+};
+---
+<Base title={d.title} description={d.description} ogImage={d.hero} ogType="article" extraLd={[ld]}
+  crumbs={[{ name: categoryName(d.category), url: `/category/${d.category}/` }, { name: d.title, url: `/stories/${post.id}/` }]}>
+  <article>
+    <header class="wrap post-head">
+      {d.advertisement && <p><span class="ad-label">Advertisement feature</span></p>}
+      <p class="kicker"><a href={`/category/${d.category}/`}>{categoryName(d.category)}</a></p>
+      <h1>{d.title}</h1>
+      <p class="post-meta">
+        <span>By <a href="/authors/">{author.name}</a></span>
+        <span><time datetime={isoDate(d.published)}>{fmtDate(d.published)}</time></span>
+        <span>{readingTime(post.body ?? '')} min read</span>
+      </p>
+    </header>
+    <div class="hero">
+      <Photo name={d.hero} eager credit widths={[480, 720, 960, 1280, 1600]} sizes="(min-width: 80rem) 80rem, 100vw" />
+    </div>
+    <div class="wrap post-layout">
+      <div>
+        <p class="updated-note">
+          Last updated <time datetime={isoDate(d.updated)}>{fmtDate(d.updated)}</time>. Practical details link to their official source; opening times, rules and timetables change, so check them before you book.
+          {d.advertisement && <> This is an advertisement feature paid for by {d.plan.operator}.</>}
+        </p>
+        <div class="prose">
+          <Content />
+        </div>
+        <PlanBox plan={d.plan} />
+        <section class="sources" aria-labelledby="sources-h">
+          <h2 id="sources-h">Sources</h2>
+          <ol>
+            {d.sources.map((s) => (
+              <li><a href={s.url} rel="noopener nofollow">{s.title}</a> <span class="host">{host(s.url)}</span></li>
+            ))}
+          </ol>
+          <p class="meta">Sources checked {fmtDate(d.updated)}. Spotted something out of date? Write to <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+        </section>
+        <p class="author-box"><strong>{author.name}</strong>, {author.role}. {author.bio}</p>
+      </div>
+    </div>
+  </article>
+  <section class="section section-alt" aria-labelledby="rel-h">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="rel-h">Related stories</h2><a href="/stories/">All stories</a></div>
+      <div class="grid grid-3">{rel.map((p) => <PostCard post={p} />)}</div>
+    </div>
+  </section>
+</Base>

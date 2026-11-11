@@ -1,0 +1,71 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import PostCard from '../components/PostCard.astro';
+import Newsletter from '../components/Newsletter.astro';
+import { getPosts, readingTime } from '../lib/posts';
+import { SITE, CATEGORIES, DESTINATIONS, categoryName, fmtDate, isoDate } from '../data/site';
+
+const posts = await getPosts();
+const featured = posts.find((p) => p.data.featured) ?? posts[0];
+const latest = posts.filter((p) => p.id !== featured.id).slice(0, 6);
+const startOrder = ['first-timers-guide-to-austria', 'austria-10-day-itinerary-by-train', 'vienna-in-three-days'];
+const start = startOrder.map((id) => posts.find((p) => p.id === id)!).filter(Boolean);
+const startBlurb: Record<string, string> = {
+  'first-timers-guide-to-austria': 'Seasons, trains, entry rules and the customs worth knowing before your first trip.',
+  'austria-10-day-itinerary-by-train': 'Vienna, the Wachau, Salzburg, Hallstatt and Innsbruck, day by day by rail.',
+  'vienna-in-three-days': 'Where most trips begin: palaces, a night at the opera and the coffee houses.',
+};
+const f = featured.data;
+---
+<Base title="Alm" description={SITE.description}>
+  <h1 class="visually-hidden">Alm: travel stories and practical guides for Austria</h1>
+  <section class="section" aria-labelledby="feat-h" style="padding-top:1.5rem">
+    <div class="wrap feature">
+      <a href={`/stories/${featured.id}/`} tabindex="-1" aria-hidden="true"><Photo name={f.hero} eager widths={[480, 720, 960, 1280]} sizes="(min-width: 56rem) 60vw, 100vw" decorative /></a>
+      <div>
+        <p class="kicker">Featured story · <a href={`/category/${f.category}/`}>{categoryName(f.category)}</a></p>
+        <h2 id="feat-h"><a href={`/stories/${featured.id}/`}>{f.title}</a></h2>
+        <p class="lede">{f.description}</p>
+        <p class="meta">By Alm editors · <time datetime={isoDate(f.published)}>{fmtDate(f.published)}</time> · {readingTime(featured.body ?? '')} min read</p>
+        <p><a class="btn" href={`/stories/${featured.id}/`}>Read the story</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="start-h">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="start-h">Start here</h2></div>
+      <p style="max-width:var(--measure)">New to Austria? These three posts cover most first trips. Read them in order, then pick a region.</p>
+      <ol class="start">
+        {start.map((p) => (
+          <li><h3><a href={`/stories/${p.id}/`}>{p.data.title}</a></h3><p>{startBlurb[p.id]}</p></li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="latest-h">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="latest-h">Latest stories</h2><a href="/stories/">All stories</a></div>
+      <div class="grid grid-3">{latest.map((p) => <PostCard post={p} />)}</div>
+    </div>
+  </section>
+
+  <section class="section section-alt" aria-labelledby="cat-h">
+    <div class="wrap">
+      <div class="sec-head"><h2 id="cat-h">Browse by subject</h2></div>
+      <ul class="cats">
+        {CATEGORIES.map((c) => <li><a href={`/category/${c.slug}/`}><strong>{c.name}</strong><span>{c.blurb}</span></a></li>)}
+      </ul>
+      <h3 style="margin-top:2rem">Destinations</h3>
+      <ul class="cats">
+        {DESTINATIONS.map((d) => <li><a href={`/destinations/${d.slug}/`}><strong>{d.name}</strong><span>{d.blurb}</span></a></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap"><Newsletter /></div>
+  </section>
+</Base>

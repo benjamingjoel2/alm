@@ -1,0 +1,20 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE } from '../data/site';
+---
+<Page kicker="Legal" title="Terms of use" path="/terms/" description="The terms for using Alm, a travel blog about Austria published by Tourground.">
+  <h2>About these terms</h2>
+  <p>Alm (alm.tourground.com) is published by Tourground. By using the site you agree to these terms.</p>
+  <h2>Information, not advice</h2>
+  <p>Alm publishes general travel information. We work from official sources and date every post, but rules, timetables, opening times, entry requirements and conditions in the mountains change. Check the official source before you travel or book, and follow local advice and the instructions of mountain rescue, lift and hut staff. You are responsible for your own decisions and safety.</p>
+  <h2>Bookings with operators</h2>
+  <p>Alm does not sell trips or take bookings. If you contact or book with an operator linked from Alm, such as Danube &amp; Alps or another company in the Tourground directory, your contract is with that operator under its own terms.</p>
+  <h2>Copyright</h2>
+  <p>Text on Alm is © Tourground. You may quote short extracts with a link to the original post. Photographs belong to their authors and are used under the licences shown with each photo and on the <a href="/photo-credits/">photo credits</a> page.</p>
+  <h2>Links</h2>
+  <p>We link to other websites for sources and planning. We are not responsible for their content.</p>
+  <h2>Liability</h2>
+  <p>To the extent the law allows, Tourground is not liable for loss arising from reliance on information on this site. Nothing in these terms limits liability that cannot be limited by law.</p>
+  <h2>Contact</h2>
+  <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+</Page>

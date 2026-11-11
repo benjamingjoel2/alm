@@ -1,0 +1,14 @@
+---
+import { Picture } from 'astro:assets';
+import { photo } from '../data/photos';
+interface Props { name: string; widths?: number[]; sizes?: string; eager?: boolean; credit?: boolean; decorative?: boolean; }
+const { name, widths = [480, 720, 960, 1280], sizes = '100vw', eager = false, credit = false, decorative = false } = Astro.props;
+const p = photo(name);
+---
+<figure class="photo">
+  <Picture src={p.src} alt={decorative ? '' : p.alt} widths={widths} sizes={sizes} formats={['avif', 'webp']} fallbackFormat="jpg" quality={70}
+    loading={eager ? 'eager' : 'lazy'} decoding={eager ? 'sync' : 'async'} fetchpriority={eager ? 'high' : 'auto'} />
+</figure>
+{credit && (
+  <p class="credit">{p.caption}. Photo: <a href={p.page} rel="noopener">{p.author}</a>, <a href={p.licenseUrl} rel="license noopener">{p.license}</a>, via Wikimedia Commons.</p>
+)}

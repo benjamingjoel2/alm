@@ -1,0 +1,32 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE } from '../data/site';
+---
+<Page kicker="Legal" title="Privacy policy" path="/privacy/" description="How Alm handles personal data: cookie-free visit statistics, server logs and emails you send us.">
+  <p>This policy explains how personal data is handled when you use Alm (alm.tourground.com). The site needs very little personal data: there are no accounts, no comments, no advertising trackers and no cookies.</p>
+  <h2>Who is responsible</h2>
+  <p>The controller of personal data processed through this site is Tourground, the publisher of Alm. Contact: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+  <h2>What we process, why, and on what basis</h2>
+  <ol>
+    <li><strong>Visit statistics.</strong> We use Vercel Web Analytics to count page views in aggregate. According to <a href="https://vercel.com/docs/analytics/privacy-policy" rel="noopener">Vercel's documentation</a>, it does not use cookies and identifies a visit by a hash of the incoming request that is discarded after 24 hours. Data points may include the time, page address, referring page, approximate location, device type, operating system and browser. Legal basis: our legitimate interest in understanding which pages are read and improving the site (GDPR and UK GDPR Article 6(1)(f)).</li>
+    <li><strong>Server logs.</strong> Our hosting provider, Vercel, processes technical request data (such as IP address, time, requested address and browser details) to deliver pages and protect the service from abuse. Legal basis: legitimate interest in running a secure website.</li>
+    <li><strong>Emails you send us</strong>, including newsletter sign-ups. If you email us, we process your email address, any name you give and your message, to reply or to send the Alm letter you asked for. Legal basis: your consent for the newsletter, which you can withdraw at any time by replying "unsubscribe"; legitimate interest for other messages.</li>
+  </ol>
+  <p>We do not sell personal data, share it for advertising, or use it for automated decision-making.</p>
+  <h2>Who receives it</h2>
+  <ul>
+    <li>Vercel Inc. (hosting and analytics), as our processor.</li>
+    <li>Our email provider, as our processor, for messages you send us.</li>
+  </ul>
+  <p>Vercel is based in the United States. Where personal data is transferred outside the EU or UK, we rely on the safeguards the law provides, such as an adequacy decision or standard contractual clauses.</p>
+  <h2>How long we keep it</h2>
+  <ul>
+    <li>Analytics: aggregated statistics only; the visitor hash is discarded after 24 hours.</li>
+    <li>Server logs: for the period set by our hosting provider for security and operations.</li>
+    <li>Newsletter: until you unsubscribe. Other emails: as long as needed to deal with your message, then up to two years.</li>
+  </ul>
+  <h2>Your rights</h2>
+  <p>Under the GDPR and UK GDPR you have the right to access, rectify and erase your data, to restrict or object to processing, and to data portability. You may complain to your data-protection authority; in Austria that is the <a href="https://dsb.gv.at/" rel="noopener">Datenschutzbehörde</a>, and in the UK the <a href="https://ico.org.uk/" rel="noopener">Information Commissioner's Office</a>.</p>
+  <h2>Links to other sites</h2>
+  <p>Posts link to official sources and to operators in the Tourground directory. Those sites have their own privacy policies.</p>
+</Page>

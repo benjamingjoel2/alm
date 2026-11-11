@@ -1,0 +1,18 @@
+---
+import Base from './Base.astro';
+import { SITE, fmtDate } from '../data/site';
+interface Props { title: string; description: string; path: string; kicker?: string }
+const { title, description, path, kicker = 'About this site' } = Astro.props;
+const reviewed = new Date(SITE.lastReviewed);
+const ld = { '@type': 'WebPage', '@id': `${SITE.url}${path}#page`, url: `${SITE.url}${path}`, name: title, description, dateModified: SITE.lastReviewed, isPartOf: { '@id': `${SITE.url}/#website` }, publisher: { '@id': `${SITE.url}/#publisher` } };
+---
+<Base title={title} description={description} crumbs={[{ name: title, url: path }]} extraLd={[ld]}>
+  <div class="wrap">
+    <article class="page">
+      <p class="kicker">{kicker}</p>
+      <h1>{title}</h1>
+      <p class="page-meta">Last reviewed <time datetime={SITE.lastReviewed}>{fmtDate(reviewed)}</time> by the Alm editors, Tourground.</p>
+      <slot />
+    </article>
+  </div>
+</Base>

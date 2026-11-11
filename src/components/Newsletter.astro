@@ -1,0 +1,13 @@
+---
+import { SITE } from '../data/site';
+const mail = `mailto:${SITE.email}?subject=${encodeURIComponent('Subscribe to Alm')}&body=${encodeURIComponent('Please add me to the Alm newsletter.')}`;
+---
+<section class="newsletter" aria-labelledby="nl-h">
+  <h2 id="nl-h">The Alm letter</h2>
+  <p>New stories from the Alps, the lakes and Vienna, and a note when a practical post is updated. Roughly once a month, no tracking pixels, unsubscribe any time.</p>
+  <div class="actions">
+    <a class="btn" href={mail}>Sign up by email</a>
+    <a href="/rss.xml">Or follow the RSS feed</a>
+  </div>
+  <p style="font-size:0.95rem;margin:1rem 0 0">Signing up sends a short email to {SITE.email}. We use your address only to send the letter. See the <a href="/privacy/">privacy policy</a>.</p>
+</section>

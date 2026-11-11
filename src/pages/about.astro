@@ -1,0 +1,29 @@
+---
+import Page from '../layouts/Page.astro';
+import Photo from '../components/Photo.astro';
+import { SITE } from '../data/site';
+---
+<Page title="About Alm" path="/about/" description="Alm is a travel blog for people planning a trip to Austria. It is published by Tourground.">
+  <p>An <em>Alm</em> is a high summer pasture in the Alps: the meadows above the tree line where cattle are taken for the warm months, often with a hut where walkers can stop for milk, cheese or a bowl of soup. It is a good place to look out over the country, which is what this blog tries to help you do.</p>
+  <Photo name="musauer-alm" credit widths={[480, 720, 960]} sizes="(min-width: 40rem) 40rem, 100vw" />
+  <h2>What Alm is</h2>
+  <p>Alm is a travel blog for people planning a trip to Austria. We write story-led, practical posts about the Alps, the lakes, Vienna, music, hut-to-hut hiking and winter, in a warm, first-hand voice and with the details you need to book.</p>
+  <h2>Who publishes it</h2>
+  <p class="published-by-inline"><strong>Alm is published by Tourground</strong> (<a href={SITE.publisherUrl}>tourground.com</a>), which runs a directory of verified local travel companies around the world. Tourground earns money from paid plans sold to travel companies, and some travel brands are owned by Tourground's founders. Our <a href="/disclosure/">disclosure</a> sets out the relationship.</p>
+  <h2>How we write</h2>
+  <ul>
+    <li><strong>Sourced.</strong> Practical facts (opening seasons, booking rules, train services, safety advice) link to their official source, and every post lists its sources at the end.</li>
+    <li><strong>Dated.</strong> Every post shows when it was published and when it was last updated.</li>
+    <li><strong>Nothing invented.</strong> We do not publish made-up reviews, quotes, prices or statistics. If we cannot source something, we leave it out.</li>
+    <li><strong>Clearly labelled.</strong> If we ever publish a paid placement it will be labelled "Advertisement feature".</li>
+  </ul>
+  <h2>Plan this trip</h2>
+  <p>Every post ends with a "Plan this trip" box pointing to a verified local operator in the <a href={SITE.directoryUrl}>Tourground directory</a>, often Danube &amp; Alps (<a href="https://danubeandalps.tourground.com/">danubeandalps.tourground.com</a>), which plans Austria trips by rail from Vienna. We do not sell trips, take bookings or handle payments ourselves.</p>
+  <h2>Contact and corrections</h2>
+  <p>If something on Alm is wrong or out of date, write to <a href={`mailto:${SITE.email}`}>{SITE.email}</a>. We correct errors and update the "last updated" date on the post.</p>
+  <dl class="facts">
+    <dt>Publisher</dt><dd>Tourground (tourground.com)</dd>
+    <dt>Email</dt><dd><a href={`mailto:${SITE.email}`}>{SITE.email}</a></dd>
+    <dt>Site</dt><dd>alm.tourground.com</dd>
+  </dl>
+</Page>

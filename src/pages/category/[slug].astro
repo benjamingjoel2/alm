@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getPosts } from '../../lib/posts';
+import { CATEGORIES, DESTINATIONS } from '../../data/site';
+export function getStaticPaths() { return CATEGORIES.map((c) => ({ params: { slug: c.slug }, props: { cat: c } })); }
+const { cat } = Astro.props;
+const posts = (await getPosts()).filter((p) => p.data.category === cat.slug);
+const isDest = cat.slug === 'destinations';
+---
+<Base title={cat.name} description={cat.blurb} ogImage={cat.photo} crumbs={[{ name: cat.name, url: `/category/${cat.slug}/` }]}>
+  <div class="wrap phead"><h1>{cat.name}</h1><p class="lede">{cat.blurb}</p></div>
+  {isDest && (
+    <section class="wrap" aria-labelledby="regions-h" style="margin-bottom:2.5rem">
+      <h2 id="regions-h">Regions</h2>
+      <ul class="cats">{DESTINATIONS.map((d) => <li><a href={`/destinations/${d.slug}/`}><strong>{d.name}</strong><span>{d.blurb}</span></a></li>)}</ul>
+    </section>
+  )}
+  <section class="wrap" aria-labelledby="posts-h">
+    <h2 id="posts-h" class={isDest ? '' : 'visually-hidden'}>Stories</h2>
+    {posts.length ? <div class="grid grid-3">{posts.map((p) => <PostCard post={p} />)}</div> : <p>New stories in this section are on the way.</p>}
+  </section>
+</Base>

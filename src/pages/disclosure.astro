@@ -1,0 +1,20 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE } from '../data/site';
+---
+<Page title="Disclosure" path="/disclosure/" description="How Alm is funded, how it relates to Tourground and Danube & Alps, and how paid content is labelled.">
+  <h2>Publisher</h2>
+  <p>Alm is published by Tourground. Tourground runs a directory of verified travel companies and earns money from paid plans sold to them. Some travel brands are owned by Tourground's founders.</p>
+  <h2>Operators we link to</h2>
+  <p>Each post ends with a "Plan this trip" box linking to a local operator listed in the <a href={SITE.directoryUrl}>Tourground directory</a>. For Austria this is usually Danube &amp; Alps (danubeandalps.tourground.com), a travel company that is part of the Tourground network. Tourground may benefit commercially when you contact or book with an operator in its directory. The box also links to the directory itself, so you can compare other operators.</p>
+  <h2>Editorial independence</h2>
+  <ul>
+    <li>No company pays to be mentioned in an editorial story.</li>
+    <li>We do not publish reviews, ratings, rankings or testimonials.</li>
+    <li>Links in a post's list of sources are citations and are marked <code>nofollow</code>.</li>
+  </ul>
+  <h2>Advertisement features</h2>
+  <p>If we publish paid content, it will be labelled "Advertisement feature" on the story card, at the top of the story and in the note under the photo, and the paying company will be named. There are no advertisement features on Alm at present.</p>
+  <h2>Questions</h2>
+  <p>Write to <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+</Page>

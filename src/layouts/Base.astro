@@ -1,0 +1,139 @@
+---
+import '../styles/global.css';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE, CATEGORIES } from '../data/site';
+import { getImage } from 'astro:assets';
+import { photo } from '../data/photos';
+
+interface Props {
+  title: string;
+  description: string;
+  crumbs?: { name: string; url: string }[];
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  extraLd?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+const { title, description, crumbs = [], ogImage = 'alpine-meadow', ogType = 'website', extraLd = [], noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const fullTitle = Astro.url.pathname === '/' ? `${SITE.name}: ${SITE.tagline}` : `${title} · ${SITE.name}`;
+const og = await getImage({ src: photo(ogImage).src, width: 1200, height: 630, fit: 'cover', format: 'jpg', quality: 75 });
+const ogUrl = new URL(og.src, SITE.url).href;
+const allCrumbs = [{ name: 'Home', url: '/' }, ...crumbs];
+const ld = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'Organization', '@id': `${SITE.url}/#publisher`, name: SITE.publisher, url: SITE.publisherUrl, email: SITE.email },
+    { '@type': 'WebSite', '@id': `${SITE.url}/#website`, name: SITE.name, url: `${SITE.url}/`, description: SITE.description, inLanguage: 'en-GB', publisher: { '@id': `${SITE.url}/#publisher` } },
+    { '@type': 'BreadcrumbList', '@id': `${canonical}#breadcrumb`, itemListElement: allCrumbs.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: c.name, item: new URL(c.url, SITE.url).href })) },
+    ...extraLd,
+  ],
+};
+const path = Astro.url.pathname;
+const nav = [
+  { name: 'Destinations', url: '/category/destinations/' },
+  ...CATEGORIES.filter((c) => c.slug !== 'destinations').map((c) => ({ name: c.name, url: `/category/${c.slug}/` })),
+];
+---
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {noindex && <meta name="robots" content="noindex" />}
+  <meta property="og:site_name" content={SITE.name} />
+  <meta property="og:type" content={ogType} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content={SITE.locale} />
+  <meta property="og:image" content={ogUrl} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content={photo(ogImage).alt} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#1f3d2e" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="alternate" type="application/rss+xml" title="Alm" href="/rss.xml" />
+  <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
+  <link rel="alternate" type="text/plain" title="llms.txt" href="/llms.txt" />
+  <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  <script is:inline>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script>
+  <script is:inline defer src="/_vercel/insights/script.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="hdr">
+    <div class="wrap hdr-inner">
+      <a class="logo" href="/" aria-label="Alm, home">Alm<small>Travel stories from Austria</small></a>
+      <nav class="nav nav-desk" aria-label="Main">
+        <ul>{nav.map((n) => <li><a href={n.url} aria-current={path.startsWith(n.url) ? 'page' : undefined}>{n.name}</a></li>)}</ul>
+      </nav>
+      <details class="nav nav-mob">
+        <summary aria-label="Menu">Menu</summary>
+        <nav aria-label="Main (mobile)">
+          <ul>
+            {nav.map((n) => <li><a href={n.url}>{n.name}</a></li>)}
+            <li><a href="/stories/">All stories</a></li>
+            <li><a href="/about/">About Alm</a></li>
+          </ul>
+        </nav>
+      </details>
+    </div>
+  </header>
+  {crumbs.length > 0 && <Breadcrumbs items={allCrumbs} />}
+  <main id="main">
+    <slot />
+  </main>
+  <footer class="foot">
+    <div class="wrap">
+      <div class="foot-grid">
+        <div>
+          <span class="brand">Alm</span>
+          <p>An <em>Alm</em> is a high summer pasture in the Alps. Alm is a travel blog for people planning a trip to Austria, with sources for every practical fact and a verified local operator for every trip.</p>
+          <p class="published-by"><a href={SITE.publisherUrl}>Published by Tourground</a></p>
+          <p><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+        </div>
+        <nav aria-label="Destinations">
+          <h2>Destinations</h2>
+          <ul>
+            <li><a href="/destinations/vienna/">Vienna</a></li>
+            <li><a href="/destinations/salzburg/">Salzburg</a></li>
+            <li><a href="/destinations/salzkammergut/">The Salzkammergut</a></li>
+            <li><a href="/destinations/tyrol-innsbruck/">Tyrol &amp; Innsbruck</a></li>
+            <li><a href="/destinations/wachau/">The Wachau</a></li>
+            <li><a href="/destinations/carinthia/">Carinthia</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="Stories">
+          <h2>Stories</h2>
+          <ul>
+            {CATEGORIES.filter((c) => c.slug !== 'destinations').map((c) => <li><a href={`/category/${c.slug}/`}>{c.name}</a></li>)}
+            <li><a href="/stories/">All stories</a></li>
+            <li><a href="/rss.xml">RSS feed</a></li>
+          </ul>
+        </nav>
+        <nav aria-label="About">
+          <h2>About</h2>
+          <ul>
+            <li><a href="/about/">About Alm</a></li>
+            <li><a href="/authors/">Authors</a></li>
+            <li><a href="/disclosure/">Disclosure</a></li>
+            <li><a href="/photo-credits/">Photo credits</a></li>
+            <li><a href="/privacy/">Privacy</a></li>
+            <li><a href="/cookies/">Cookies</a></li>
+            <li><a href="/terms/">Terms</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="foot-bottom">
+        <span>Alm · alm.tourground.com · Published by Tourground</span>
+        <span><a href="/llms.txt">llms.txt</a> · <a href="/sitemap-index.xml">Sitemap</a></span>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
